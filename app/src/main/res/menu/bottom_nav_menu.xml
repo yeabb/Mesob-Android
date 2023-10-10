@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/miFoodMenu"
+        android:title="Menu"
+        android:icon="@drawable/ic_menu" />
+
+    <item
+        android:id="@+id/miReservations"
+        android:title="Reservations"
+        android:icon="@drawable/ic_reservations" />
+
+    <item
+        android:id="@+id/miRefer"
+        android:title="Refer"
+        android:icon="@drawable/ic_refer" />
+
+    <item
+        android:id="@+id/miMap"
+        android:title="Map"
+        android:icon="@drawable/ic_map"/>
+
+
+
+</menu>
