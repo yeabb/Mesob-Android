@@ -12,15 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.mesob.Login
-import com.example.mesob.R
 import com.google.firebase.auth.FirebaseAuth
-//import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class Signup : Fragment() {
 
     private lateinit var firebaseAuth: FirebaseAuth
-//    private lateinit var firestore: FirebaseFirestore
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var btSignup: Button
     private lateinit var etFirstName: EditText
     private lateinit var etLastName: EditText
@@ -37,7 +36,7 @@ class Signup : Fragment() {
 
 
         firebaseAuth = FirebaseAuth.getInstance()
-//        firestore = FirebaseFirestore.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         btSignup = view.findViewById(R.id.btSignup)
         etFirstName = view.findViewById(R.id.etFirstName)
         etLastName = view.findViewById(R.id.etLastName)
@@ -57,7 +56,7 @@ class Signup : Fragment() {
                         if (task.isSuccessful) {
                             val user = firebaseAuth.currentUser
                             val userId = user?.uid
-//                            saveUserDetailsToFirestore(userId, firstName, lastName)
+                            saveUserDetailsToFirestore(userId, firstName, lastName)
                             navigateToLoginFragment()
 
                         } else {
@@ -79,28 +78,28 @@ class Signup : Fragment() {
 
 
 
-//    private fun saveUserDetailsToFirestore(userId: String?, firstName: String, lastName: String) {
-//        userId?.let {
-//            val userDocRef = firestore.collection("users").document(it)
-//            val userData = hashMapOf(
-//                "firstName" to firstName,
-//                "lastName" to lastName
-//            )
-//
-//            userDocRef.set(userData)
-//                .addOnSuccessListener {
-//                    // Data saved successfully
-//                }
-//                .addOnFailureListener { e ->
-//                    // Handle the error
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "Error saving user data: ${e.message}",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//        }
-//    }
+    private fun saveUserDetailsToFirestore(userId: String?, firstName: String, lastName: String) {
+        userId?.let {
+            val userDocRef = firestore.collection("users").document(it)
+            val userData = hashMapOf(
+                "firstName" to firstName,
+                "lastName" to lastName
+            )
+
+            userDocRef.set(userData)
+                .addOnSuccessListener {
+                    // Data saved successfully
+                }
+                .addOnFailureListener { e ->
+                    // Handle the error
+                    Toast.makeText(
+                        requireContext(),
+                        "Error saving user data: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
 
 
     private fun navigateToLoginFragment() {
