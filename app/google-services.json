@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "85309646392",
+    "project_id": "mesob-ee343",
+    "storage_bucket": "mesob-ee343.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85309646392:android:a09f8014434945476d28cd",
+        "android_client_info": {
+          "package_name": "com.example.mesob"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy6WMWGbdMlbb0hYhO2NF-4WjKKWJBBTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,11 +10,14 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.example.mesob.databinding.ActivityMainBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.collections.Map
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var tvNavUserName: TextView
     private lateinit var tvNavEmail : TextView
 
@@ -33,12 +36,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvNavEmail = headerView.findViewById<TextView>(R.id.tvNavEmail)
 
 
+        FirebaseApp.initializeApp(this)
+        firebaseAuth = FirebaseAuth.getInstance()
+
+//        firebaseAuth.signOut()
+
+        val currentUser = firebaseAuth.currentUser
 
 
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         binding.navigationDrawer.setNavigationItemSelectedListener(this)
+
+
+        if (currentUser == null) {
+            // User is not authenticated, redirect to the login screen (Login fragment)
+            replaceFragment(Signup())
+        } else {
+            replaceFragment(FoodMenu())
+        }
 
 
         binding.bottomNavigationView.setOnItemSelectedListener {
