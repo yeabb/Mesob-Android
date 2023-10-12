@@ -1,5 +1,6 @@
 package com.example.mesob
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -53,7 +54,27 @@ class FoodMenu : Fragment() {
         adapter = FoodMenuAdapter(foodMenuArrayList)
         foodMenuRecyclerView.adapter = adapter
 
+
+
+        adapter.onItemClickListener = { foodMenu ->
+            val intent = Intent(requireContext(), FoodMenuDetailsExpand::class.java)
+
+            // Retrieve the document ID associated with the gas station data
+            val foodMenuId = foodMenusWithIds.find { it.second == foodMenu }?.first
+
+            intent.putExtra("foodMenuId", foodMenuId) // Pass the document ID
+            intent.putExtra("foodName", foodMenu.foodName)
+            intent.putExtra("restaurantName", foodMenu.restaurantName)
+            intent.putExtra("restaurantAdress", foodMenu.restaurantAdress)
+            intent.putExtra("restaurantPhone", foodMenu.restaurantPhone)
+            foodMenu.location?.let { intent.putExtra("restaurantLatitude", it.latitude) }
+            foodMenu.location?.let { intent.putExtra("restaurantLongitude", it.longitude) }
+            intent.putExtra("foodCreditNumber", foodMenu.foodCreditNumber)
+            startActivity(intent)
+        }
     }
+
+
 
 
     private lateinit var foodMenusWithIds: MutableList<Pair<String, FoodMenuData>>

@@ -8,5 +8,7 @@ data class FoodMenuData(
     var restaurantAdress: String = "",
     var restaurantPhone: String = "",
     var location : GeoPoint? = null,
-    var foodCreditNumber : Int = 0
+    var foodCreditNumber : Int = 0,
+    var foodIngredients : String = "",
+    var rating : Int = 3
 )
