@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,6 +57,7 @@ class FoodMenu : Fragment() {
 
 
 
+
         adapter.onItemClickListener = { foodMenu ->
             val intent = Intent(requireContext(), FoodMenuDetailsExpand::class.java)
 
@@ -70,6 +72,8 @@ class FoodMenu : Fragment() {
             foodMenu.location?.let { intent.putExtra("restaurantLatitude", it.latitude) }
             foodMenu.location?.let { intent.putExtra("restaurantLongitude", it.longitude) }
             intent.putExtra("foodCreditNumber", foodMenu.foodCreditNumber)
+            intent.putExtra("foodIngredients", foodMenu.foodIngredients)
+            intent.putExtra("rating", foodMenu.rating)
             startActivity(intent)
         }
     }
