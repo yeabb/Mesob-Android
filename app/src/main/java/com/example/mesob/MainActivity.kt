@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        firebaseAuth.signOut()
+//        firebaseAuth.signOut()
 
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid
