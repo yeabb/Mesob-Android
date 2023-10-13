@@ -14,12 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="Gas Station Icon"
-        android:src="@drawable/ic_foodmenu"
+        android:src="@drawable/kitfo"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0.5"/>
+
+    <View
+        android:id="@+id/separator1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#ECECEC"
+        app:layout_constraintTop_toBottomOf="@+id/ivFoodMenuIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
 
     <!-- Food Menu Name -->
     <TextView
@@ -30,10 +41,9 @@
         android:textSize="28sp"
         android:textColor="#333333"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/ivFoodMenuIcon"
+        app:layout_constraintTop_toBottomOf="@+id/separator1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="10dp" />
 
     <!-- Food Menu Ingredients -->
 
@@ -62,8 +72,8 @@
 
         <TextView
             android:id="@+id/tvFoodCreditNumber"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:gravity="center"
             android:layout_marginEnd="8dp"
             android:text="5"
@@ -84,52 +94,52 @@
             android:background="#00FF00"/>
 
 
+
     </LinearLayout>
 
 
 
-
-
-
     <!-- Get Directions Button -->
+
     <Button
         android:id="@+id/btToGoogleMap"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:text="Get Directions"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_background2"
         android:elevation="4dp"
         android:stateListAnimator="@null"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Get Direction"
+        android:textColor="#FF000000"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
 
     <!-- Separator Line -->
     <View
-        android:id="@+id/separator"
+        android:id="@+id/separator2"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#ECECEC"
         app:layout_constraintTop_toBottomOf="@+id/btToGoogleMap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginTop="18dp"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardBackgroundColor="#F5F5F5"
-        app:layout_constraintTop_toBottomOf="@+id/separator"
+        app:layout_constraintTop_toBottomOf="@+id/separator2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -155,7 +165,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_filled_star"
+                    android:src="@drawable/ic_empty_star"
                     android:onClick="onStarClick" />
 
                 <ImageView
@@ -163,7 +173,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_filled_star"
+                    android:src="@drawable/ic_empty_star"
                     android:onClick="onStarClick" />
 
                 <ImageView
@@ -171,7 +181,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_half_star"
+                    android:src="@drawable/ic_empty_star"
                     android:onClick="onStarClick" />
 
                 <ImageView
@@ -208,15 +218,17 @@
         android:id="@+id/btReserveFood"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        android:layout_marginTop="60dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_background"
+        android:elevation="4dp"
+        android:stateListAnimator="@null"
         android:text="Reserve Food"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:elevation="4dp"
-        android:stateListAnimator="@null"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="70dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

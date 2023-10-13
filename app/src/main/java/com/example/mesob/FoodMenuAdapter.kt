@@ -20,7 +20,7 @@ class FoodMenuAdapter(private var foodMenuArr: ArrayList<FoodMenuData>):
         val tvFoodCreditNumber: TextView = itemView.findViewById(R.id.tvFoodCreditNumber)
 
         fun bind(foodMenu: FoodMenuData) {
-            siFoodImage.setImageResource(R.drawable.ic_foodmenu)
+            siFoodImage.setImageResource(R.drawable.kitfo)
             tvFoodName.text = foodMenu.foodName
             tvRestaurantName.text = foodMenu.restaurantName
 
@@ -47,7 +47,7 @@ class FoodMenuAdapter(private var foodMenuArr: ArrayList<FoodMenuData>):
 
     override fun onBindViewHolder(holder: FoodMenuViewHolder, position: Int) {
         val currentItem = foodMenuArr[position]
-        holder.siFoodImage.setImageResource(R.drawable.ic_foodmenu)
+        holder.siFoodImage.setImageResource(R.drawable.kitfo)
         holder.tvFoodName.text = currentItem.foodName
         holder.tvRestaurantName.text = currentItem.restaurantName
 
