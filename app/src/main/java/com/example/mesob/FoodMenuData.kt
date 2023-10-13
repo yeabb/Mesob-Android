@@ -10,5 +10,7 @@ data class FoodMenuData(
     var location : GeoPoint? = null,
     var foodCreditNumber : Int = 0,
     var foodIngredients : String = "",
-    var rating : Int = 3
+    var rating : Int = 0,
+    var numberOfReviews : Int = 0,
+    var totalSumRating : Int = 0,
 )

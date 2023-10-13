@@ -44,7 +44,7 @@ class FoodMenu : Fragment() {
         firestore = FirebaseFirestore.getInstance()
 
         // Initialize user's location (replace with actual coordinates)
-        userLocation = GeoPoint(9.020478527484224, 38.759949051401776)
+        userLocation = GeoPoint(40.748817, -73.985428)
 
         dataInitialize(userLocation)
 
@@ -74,6 +74,7 @@ class FoodMenu : Fragment() {
             intent.putExtra("foodCreditNumber", foodMenu.foodCreditNumber)
             intent.putExtra("foodIngredients", foodMenu.foodIngredients)
             intent.putExtra("rating", foodMenu.rating)
+            intent.putExtra("numberOfReviews", foodMenu.numberOfReviews)
             startActivity(intent)
         }
     }

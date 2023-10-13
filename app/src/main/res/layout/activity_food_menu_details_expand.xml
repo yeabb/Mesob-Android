@@ -161,12 +161,22 @@
 
                 <!-- 5 Stars -->
                 <ImageView
+                    android:id="@+id/star0"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_empty_star"
+                    android:onClick="onStarClick"
+                    android:tag="0"/>
+
+                <ImageView
                     android:id="@+id/star1"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:onClick="onStarClick"
+                    android:tag="1"/>
 
                 <ImageView
                     android:id="@+id/star2"
@@ -174,7 +184,8 @@
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:onClick="onStarClick"
+                    android:tag="2"/>
 
                 <ImageView
                     android:id="@+id/star3"
@@ -182,22 +193,17 @@
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:onClick="onStarClick"
+                    android:tag="3"/>
 
                 <ImageView
                     android:id="@+id/star4"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:onClick="onStarClick"
+                    android:tag="4"/>
 
-                <ImageView
-                    android:id="@+id/star5"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
             </LinearLayout>
 
 
