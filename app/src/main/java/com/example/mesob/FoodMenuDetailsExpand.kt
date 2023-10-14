@@ -10,12 +10,19 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.roundToInt
 
 class FoodMenuDetailsExpand : AppCompatActivity() {
 
     private lateinit var btToGoogleMap: Button
+    private lateinit var btReserveFood: Button
     private lateinit var tvFoodName: TextView
     private lateinit var firestore: FirebaseFirestore
     private lateinit var tvFoodCreditNumber: TextView
@@ -28,6 +35,7 @@ class FoodMenuDetailsExpand : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
 
         btToGoogleMap = findViewById(R.id.btToGoogleMap)
+        btReserveFood = findViewById(R.id.btReserveFood)
         tvFoodName = findViewById(R.id.tvFoodName)
         tvFoodCreditNumber = findViewById(R.id.tvFoodCreditNumber)
         tvFoodIngredients = findViewById(R.id.tvFoodIngredients)
@@ -47,10 +55,20 @@ class FoodMenuDetailsExpand : AppCompatActivity() {
         tvFoodCreditNumber.text = foodCreditNumber.toString()
         tvFoodIngredients.text = foodIngredients
 
+
+
         btToGoogleMap.setOnClickListener {
             Log.d("GoogleMap Button Click", "Google map Button clicked!")
             openGoogleMapsDirections(restaurantLatitude, restaurantLongitude)
         }
+
+
+        btReserveFood.setOnClickListener {
+            showBottomSheetDialog()
+        }
+
+
+
 
         // Set up click listeners for star ImageView elements
         val starIds = listOf(R.id.star0, R.id.star1, R.id.star2, R.id.star3, R.id.star4)
@@ -129,6 +147,69 @@ class FoodMenuDetailsExpand : AppCompatActivity() {
                 Toast.makeText(this, "Failed to retrieve rating data: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+
+
+
+    private fun generateTimeSlots(): List<TimeWindow> {
+        val timeWindows = mutableListOf<TimeWindow>()
+        val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 11)
+        calendar.set(Calendar.MINUTE, 30)
+
+        val endCalendar = Calendar.getInstance()
+        endCalendar.set(Calendar.HOUR_OF_DAY, 14)
+        endCalendar.set(Calendar.MINUTE, 30)
+
+        while (calendar.before(endCalendar)) {
+            val startTime = format.format(calendar.time)
+            calendar.add(Calendar.MINUTE, 15)
+            val endTime = format.format(calendar.time)
+
+            timeWindows.add(TimeWindow(startTime, endTime))
+        }
+
+        return timeWindows
+    }
+
+
+
+    fun showBottomSheetDialog() {
+
+        val view = layoutInflater.inflate(R.layout.select_timewindow_bottom_sheet, null)
+
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(view)
+        dialog.show()
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvSelectTimeWindow)
+        val btSelectTimeWindow = view.findViewById<Button>(R.id.btSelectTimeWindow)
+
+
+        val timewindows = generateTimeSlots()
+        val adapter = TimeSlotAdapter(timewindows)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        btSelectTimeWindow.setOnClickListener {
+            val selectedTimeWindow = adapter.getSelectedTimeWindow()
+            if (selectedTimeWindow != null) {
+                val timeWindowToDisplay = "${selectedTimeWindow.startTime} - ${selectedTimeWindow.endTime}"
+                Toast.makeText(this, "Selected Time Window: $timeWindowToDisplay", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please select a time window.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    fun performCustomAction() {
+        // Implement your custom action here
+        // For example, navigate to another activity or perform some operation
+    }
+
 
 
 }
