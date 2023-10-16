@@ -1,6 +1,9 @@
 package com.example.mesob
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,11 +19,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.collections.Map
 import kotlin.math.roundToInt
+
 
 class FoodMenuDetailsExpandPreReservation : Fragment() {
 
@@ -47,7 +54,8 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         tvFoodIngredients = view.findViewById(R.id.tvFoodIngredients)
 
         // Get data from arguments and set the text of UI elements
-        val foodMenuId = arguments?.getString("foodMenuId")
+        val userId = arguments?.getString("userId").toString()
+        val foodMenuId = arguments?.getString("foodMenuId").toString()
         val foodName = arguments?.getString("foodName")
         val foodCreditNumber = arguments?.getInt("foodCreditNumber", 0)
         val foodIngredients = arguments?.getString("foodIngredients")
@@ -63,7 +71,7 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         }
 
         btReserveFood.setOnClickListener {
-            showBottomSheetDialog()
+            showBottomSheetDialog(foodMenuId, userId)
         }
 
         // Set up click listeners for star ImageView elements
@@ -168,7 +176,7 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         return timeWindows
     }
 
-    fun showBottomSheetDialog() {
+    fun showBottomSheetDialog(foodMenuId: String, userId: String) {
         val view = layoutInflater.inflate(R.layout.select_timewindow_bottom_sheet, null)
 
         val dialog = BottomSheetDialog(requireContext())
@@ -184,14 +192,61 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         recyclerView.adapter = adapter
 
         btSelectTimeWindow.setOnClickListener {
+
             val selectedTimeWindow = adapter.getSelectedTimeWindow()
             if (selectedTimeWindow != null) {
                 val timeWindowToDisplay = "${selectedTimeWindow.startTime} - ${selectedTimeWindow.endTime}"
 
-                Toast.makeText(requireContext(), "Selected Time Window: $timeWindowToDisplay", Toast.LENGTH_SHORT).show()
+                val data = mapOf(
+                    "liveReservations" to FieldValue.arrayUnion(foodMenuId)
+                )
+
+                firestore.collection("users")
+                    .document(userId)
+                    .update(data)
+                    .addOnSuccessListener {
+                        // Handle success
+                        // The specific field has been successfully updated in Firestore
+
+
+                    }
+                    .addOnFailureListener { e ->
+                        // Handle failure
+                        // There was an error updating the specific field in Firestore
+//                        showCustomMessageDialog("Reservation was unsuccessful, please try again")
+
+
+                    }
+
+                dialog.cancel()
+                showCustomMessageDialog("You have successfully reserved the food")
+                replaceFragment(FoodMenuDetailsExpandPostReservation())
+
+
             } else {
                 Toast.makeText(requireContext(), "Please select a time window.", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun showCustomMessageDialog(message: String) {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.custom_message_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessageDialog)
+
+        tvMessage.text = message
+        dialog.show()
+    }
+
+
+    private fun replaceFragment(fragment: Fragment) {
+        // Assuming that MainActivity has a function to replace fragments
+        if (activity is FoodMenuDetailsExpand) {
+            (activity as FoodMenuDetailsExpand).replaceFragment(fragment)
         }
     }
 }
