@@ -83,7 +83,9 @@ class Signup : Fragment() {
             val userDocRef = firestore.collection("users").document(it)
             val userData = hashMapOf(
                 "firstName" to firstName,
-                "lastName" to lastName
+                "lastName" to lastName,
+                "liveReservations" to arrayListOf<String>(), // Initialize with an empty array
+                "pastReservations" to arrayListOf<String>() // Initialize with an empty array
             )
 
             userDocRef.set(userData)

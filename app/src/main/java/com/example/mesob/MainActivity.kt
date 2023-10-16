@@ -3,6 +3,7 @@ package com.example.mesob
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -51,6 +52,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val email = currentUser?.email.toString()
 
 
+
+        //Transfer the user id to the FoodMenu fragment for later use
+        val args = Bundle()
+        args.putString("userId", userId.toString())
+        val foodMenu = FoodMenu()
+        foodMenu.arguments = args
+
+
+
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -93,14 +103,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             showToolbarAndNavigationView()
             showBottomNavigation()
-            replaceFragment(FoodMenu())
+            replaceFragment(foodMenu)
         }
+
+
 
 
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.miFoodMenu -> replaceFragment(FoodMenu())
+                R.id.miFoodMenu -> replaceFragment(foodMenu)
                 R.id.miReservations -> replaceFragment(Reservations())
                 R.id.miRefer -> replaceFragment(Refer())
 //                R.id.miMap -> replaceFragment(kotlin.collections.Map())

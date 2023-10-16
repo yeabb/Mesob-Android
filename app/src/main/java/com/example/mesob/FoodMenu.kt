@@ -57,6 +57,12 @@ class FoodMenu : Fragment() {
 
 
 
+        //Get the userId from the main activity as an arg
+        val userId = arguments?.getString("userId")
+
+
+
+
 
         adapter.onItemClickListener = { foodMenu ->
             val intent = Intent(requireContext(), FoodMenuDetailsExpand::class.java)
@@ -65,6 +71,7 @@ class FoodMenu : Fragment() {
             val foodMenuId = foodMenusWithIds.find { it.second == foodMenu }?.first
 
             intent.putExtra("foodMenuId", foodMenuId) // Pass the document ID
+            intent.putExtra("userId", userId)
             intent.putExtra("foodName", foodMenu.foodName)
             intent.putExtra("restaurantName", foodMenu.restaurantName)
             intent.putExtra("restaurantAdress", foodMenu.restaurantAdress)
@@ -106,7 +113,7 @@ class FoodMenu : Fragment() {
                     }
                 }
 
-                // Sort the gasArrayList by distance
+                // Sort the foodMenuArrayList by distance
                 foodMenuArrayList.sortBy { it.location?.let { it1 -> calculateHaversineDistance(it1, userLocation) } }
                 adapter.notifyDataSetChanged() // Notify the adapter that data has changed
             }
