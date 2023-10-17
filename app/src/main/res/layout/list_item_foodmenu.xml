@@ -63,40 +63,35 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_filled_star"
-                    android:onClick="onStarClick" />
+                    android:src="@drawable/ic_filled_star"/>
 
                 <ImageView
                     android:id="@+id/star2"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_filled_star"
-                    android:onClick="onStarClick" />
+                    android:src="@drawable/ic_filled_star"/>
 
                 <ImageView
                     android:id="@+id/star3"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_half_star"
-                    android:onClick="onStarClick" />
+                    android:src="@drawable/ic_half_star"/>
 
                 <ImageView
                     android:id="@+id/star4"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:src="@drawable/ic_empty_star"/>
 
                 <ImageView
                     android:id="@+id/star5"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="30dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick" />
+                    android:src="@drawable/ic_empty_star"/>
 
 
             </LinearLayout>

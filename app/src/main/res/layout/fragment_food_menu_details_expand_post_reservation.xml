@@ -134,85 +134,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Card Content -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Rating Bar Container -->
-            <LinearLayout
-                android:id="@+id/llRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp">
-
-                <!-- 5 Stars -->
-                <ImageView
-                    android:id="@+id/star0"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick"
-                    android:tag="0"/>
-
-                <ImageView
-                    android:id="@+id/star1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick"
-                    android:tag="1"/>
-
-                <ImageView
-                    android:id="@+id/star2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick"
-                    android:tag="2"/>
-
-                <ImageView
-                    android:id="@+id/star3"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick"
-                    android:tag="3"/>
-
-                <ImageView
-                    android:id="@+id/star4"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_empty_star"
-                    android:onClick="onStarClick"
-                    android:tag="4"/>
-
-            </LinearLayout>
-
-
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please consider rating this menu"
+                android:text="Put some thing here"
                 android:textSize="20sp"
                 android:textColor="#333333"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp" />
 
-        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/btPickFood"
+        android:id="@+id/btPickUpFood"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="60dp"
