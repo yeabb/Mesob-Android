@@ -60,6 +60,8 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         val foodCreditNumber = arguments?.getInt("foodCreditNumber", 0)
         val foodIngredients = arguments?.getString("foodIngredients")
 
+
+
         tvFoodName.text = foodName
         tvFoodCreditNumber.text = foodCreditNumber.toString()
         tvFoodIngredients.text = foodIngredients
@@ -70,8 +72,18 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
             openGoogleMapsDirections(restaurantLatitude, restaurantLongitude)
         }
 
+
+        //passing date as an arg to the post fragment
+        val args = Bundle()
+        args.putString("foodMenuId", foodMenuId)
+        args.putString("userId", userId)
+
+        val foodMenuDetailsExpandPostReservation = FoodMenuDetailsExpandPostReservation()
+        foodMenuDetailsExpandPostReservation.arguments = args
+
+
         btReserveFood.setOnClickListener {
-            showBottomSheetDialog(foodMenuId, userId)
+            showBottomSheetDialog(foodMenuId, userId, foodMenuDetailsExpandPostReservation)
         }
 
         // Set up click listeners for star ImageView elements
@@ -176,7 +188,7 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
         return timeWindows
     }
 
-    fun showBottomSheetDialog(foodMenuId: String, userId: String) {
+    fun showBottomSheetDialog(foodMenuId: String, userId: String, foodMenuDetailsExpandPostReservation: Fragment) {
         val view = layoutInflater.inflate(R.layout.select_timewindow_bottom_sheet, null)
 
         val dialog = BottomSheetDialog(requireContext())
@@ -220,7 +232,7 @@ class FoodMenuDetailsExpandPreReservation : Fragment() {
 
                 dialog.cancel()
                 showCustomMessageDialog("You have successfully reserved the food")
-                replaceFragment(FoodMenuDetailsExpandPostReservation())
+                replaceFragment(foodMenuDetailsExpandPostReservation)
 
 
             } else {

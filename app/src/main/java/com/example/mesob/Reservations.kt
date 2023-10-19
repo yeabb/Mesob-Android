@@ -17,6 +17,7 @@ class Reservations : Fragment() {
     private lateinit var adapter: ReservationsAdapter
     private lateinit var reservationRecyclerView: RecyclerView
     private lateinit var foodMenuArrayList: ArrayList<FoodMenuData>
+    private lateinit var foodPickUpDateTimesArr: ArrayList<String>
     private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
@@ -39,24 +40,39 @@ class Reservations : Fragment() {
         reservationRecyclerView = view.findViewById(R.id.rvReservations)
         reservationRecyclerView.layoutManager = layoutManager
         reservationRecyclerView.setHasFixedSize(true)
-        adapter = ReservationsAdapter(foodMenuArrayList)
+        adapter = ReservationsAdapter(foodMenuArrayList, foodPickUpDateTimesArr)
         reservationRecyclerView.adapter = adapter
 
         // Get the userId from the main activity as an argument
         val userId = arguments?.getString("userId")
 
-        adapter.onItemClickListener = { foodMenu ->
+        adapter.onItemClickListener = { foodMenu, foodPickUpDateTime ->
             val intent = Intent(requireContext(), ReservationDetailsExpand::class.java)
 
             // Retrieve the document ID associated with the food menu data
             val foodMenuId = foodMenusWithIds.find { it.second == foodMenu }?.first
 
+
             // Pass data to the next activity
-            intent.putExtra("foodMenuId", foodMenuId)
+            intent.putExtra("foodMenuId", foodMenuId) // Pass the document ID
             intent.putExtra("userId", userId)
+            intent.putExtra("foodName", foodMenu.foodName)
+            intent.putExtra("restaurantName", foodMenu.restaurantName)
+            intent.putExtra("restaurantAdress", foodMenu.restaurantAdress)
+            intent.putExtra("restaurantPhone", foodMenu.restaurantPhone)
+            foodMenu.location?.let { intent.putExtra("restaurantLatitude", it.latitude) }
+            foodMenu.location?.let { intent.putExtra("restaurantLongitude", it.longitude) }
+            intent.putExtra("foodCreditNumber", foodMenu.foodCreditNumber)
+            intent.putExtra("rating", foodMenu.rating)
+            intent.putExtra("numberOfReviews", foodMenu.numberOfReviews)
+            intent.putExtra("foodPickUpDateTime", foodPickUpDateTime)
+
+
 
 
             startActivity(intent)
+
+
         }
     }
 
@@ -64,6 +80,7 @@ class Reservations : Fragment() {
 
     private fun dataInitialize() {
         foodMenuArrayList = arrayListOf()
+        foodPickUpDateTimesArr = arrayListOf()
         foodMenusWithIds = mutableListOf()
 
         // Reference to the "users" collection in Firestore
@@ -79,25 +96,31 @@ class Reservations : Fragment() {
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
-                        val pastReservations = documentSnapshot.get("pastReservations") as List<String>
+                        val pastReservations = documentSnapshot.get("pastReservations") as? MutableList<HashMap<String, Any>>
 
                         // For each foodMenuId in pastReservations, access the "food_menus" collection
-                        for (foodMenuId in pastReservations) {
-                            val foodMenuReference = firestore.collection("food_menus").document(foodMenuId)
+                        if (pastReservations != null) {
+                            for (item in pastReservations) {
+                                val foodMenuId = item["foodMenuId"] as String
+                                val foodPickUpDateTime = item["foodPickUpDateTime"] as String
+                                foodPickUpDateTimesArr.add(foodPickUpDateTime)
+                                val foodMenuReference = firestore.collection("food_menus").document(foodMenuId)
 
-                            // Fetch data for each foodMenuId
-                            foodMenuReference.get().addOnSuccessListener { foodMenuDocumentSnapshot ->
-                                val foodMenu = foodMenuDocumentSnapshot.toObject(FoodMenuData::class.java)
 
-                                if (foodMenu != null) {
-                                    val documentId = foodMenuDocumentSnapshot.id
-                                    foodMenusWithIds.add(Pair(documentId, foodMenu))
-                                    foodMenuArrayList.add(foodMenu)
-                                    adapter.notifyDataSetChanged()
+                                // Fetch data for each foodMenuId
+                                foodMenuReference.get().addOnSuccessListener { foodMenuDocumentSnapshot ->
+                                    val foodMenu = foodMenuDocumentSnapshot.toObject(FoodMenuData::class.java)
+
+                                    if (foodMenu != null) {
+                                        val documentId = foodMenuDocumentSnapshot.id
+                                        foodMenusWithIds.add(Pair(documentId, foodMenu))
+                                        foodMenuArrayList.add(foodMenu)
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }.addOnFailureListener { exception ->
+                                    // Handle any errors here
+                                    Log.e("Firestore", "Error fetching data: ${exception.message}")
                                 }
-                            }.addOnFailureListener { exception ->
-                                // Handle any errors here
-                                Log.e("Firestore", "Error fetching data: ${exception.message}")
                             }
                         }
                     }

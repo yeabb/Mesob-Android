@@ -1,22 +1,17 @@
 package com.example.mesob
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.google.zxing.ResultPoint
-import com.example.mesob.R
 
-class QrCodeScanner : Fragment() {
+class QRCodeScanner : Fragment() {
 
     private val SCAN_QR_CODE_REQUEST_CODE = 100
 

@@ -53,11 +53,12 @@ class FoodMenuDetailsExpand : AppCompatActivity() {
         args.putInt("rating", rating)
 
 
-        // Create the the 2 fragments and set arguments for both
+        // Create the the 3 fragments and set arguments for both
         val preReservationFragment = FoodMenuDetailsExpandPreReservation()
         preReservationFragment.arguments = args
         val postReservationFragment = FoodMenuDetailsExpandPostReservation()
         postReservationFragment.arguments = args
+
 
 
 
@@ -91,8 +92,6 @@ class FoodMenuDetailsExpand : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
-
 
     }
 

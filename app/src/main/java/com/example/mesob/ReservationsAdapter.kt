@@ -8,28 +8,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
+import org.w3c.dom.Text
 
-class ReservationsAdapter(private var foodMenuArr: ArrayList<FoodMenuData>):
+class ReservationsAdapter(private var foodMenuArr: ArrayList<FoodMenuData>,
+    private val foodPickUpDateTimesArr: ArrayList<String>):
 
     RecyclerView.Adapter<ReservationsAdapter.ReservationsViewHolder>() {
 
-    var onItemClickListener: ((FoodMenuData) -> Unit)? = null
+    var onItemClickListener: ((FoodMenuData, String) -> Unit)? = null
 
     inner class ReservationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val siFoodImage: ShapeableImageView = itemView.findViewById(R.id.siFoodImage)
         val tvFoodName: TextView = itemView.findViewById(R.id.tvFoodName)
         val tvRestaurantName: TextView = itemView.findViewById(R.id.tvRestaurantName)
+        val tvFoodPickUpDateTime : TextView = itemView.findViewById(R.id.tvFoodPickUpDateTime)
 
 
 
 
-        fun bind(foodMenu: FoodMenuData) {
+        fun bind(foodMenu: FoodMenuData, foodPickUpDateTime: String) {
             siFoodImage.setImageResource(R.drawable.kitfo)
             tvFoodName.text = foodMenu.foodName
             tvRestaurantName.text = foodMenu.restaurantName
+            tvFoodPickUpDateTime.text = foodPickUpDateTime
 
             itemView.setOnClickListener {
-                onItemClickListener?.invoke(foodMenu)
+                onItemClickListener?.invoke(foodMenu, foodPickUpDateTime)
             }
         }
     }
@@ -46,11 +50,13 @@ class ReservationsAdapter(private var foodMenuArr: ArrayList<FoodMenuData>):
 
     override fun onBindViewHolder(holder: ReservationsViewHolder, position: Int) {
         val currentItem = foodMenuArr[position]
+        val foodPickUpDateTime = foodPickUpDateTimesArr[position]
         holder.siFoodImage.setImageResource(R.drawable.kitfo)
         holder.tvFoodName.text = currentItem.foodName
         holder.tvRestaurantName.text = currentItem.restaurantName
+        holder.tvFoodPickUpDateTime.text = foodPickUpDateTime
 
 
-        holder.bind(currentItem)
+        holder.bind(currentItem, foodPickUpDateTime)
     }
 }

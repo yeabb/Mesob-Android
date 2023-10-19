@@ -1,12 +1,8 @@
 package com.example.mesob
 
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +46,8 @@ class FoodMenuDetailsExpandPostReservation : Fragment() {
         val foodCreditNumber = arguments?.getInt("foodCreditNumber", 0)
         val foodIngredients = arguments?.getString("foodIngredients")
 
+
+
         tvFoodName.text = foodName
         tvFoodIngredients.text = foodIngredients
 
@@ -61,11 +59,21 @@ class FoodMenuDetailsExpandPostReservation : Fragment() {
 
 
         // Initialize Firestore
-        firestore = FirebaseFirestore.getInstance()
+//        firestore = FirebaseFirestore.getInstance()
+
+        val args = Bundle()
+        args.putString("foodMenuId", foodMenuId)
+        args.putString("userId", userId)
+
+        val postQRCodeScanner = PostQRCodeScanner()
+        postQRCodeScanner.arguments = args
+
+
 
 
         btPickUpFood.setOnClickListener {
-            replaceFragment(QrCodeScanner())
+//            replaceFragment(QRCodeScanner())
+            replaceFragment(postQRCodeScanner)
         }
 
         return view
