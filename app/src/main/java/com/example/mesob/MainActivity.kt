@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.miFoodMenu -> replaceFragment(foodMenu)
                 R.id.miReservations -> replaceFragment(reservations)
                 R.id.miRefer -> replaceFragment(Refer())
-//                R.id.miMap -> replaceFragment(kotlin.collections.Map())
+                R.id.miMap -> replaceFragment(Map())
             }
             true
         }

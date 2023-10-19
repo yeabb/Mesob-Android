@@ -12,12 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.QuerySnapshot
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class Reservations : Fragment() {
     private lateinit var adapter: ReservationsAdapter
     private lateinit var reservationRecyclerView: RecyclerView
     private lateinit var foodMenuArrayList: ArrayList<FoodMenuData>
-    private lateinit var foodPickUpDateTimesArr: ArrayList<String>
+    private lateinit var foodPickUpDateTimesArr: ArrayList<Date>
+    private lateinit var foodMenusWithIds: MutableList<Pair<String, FoodMenuData>>
+    private lateinit var foodPickUpDateTimesWithIds: MutableList<Pair<Date, String>>
     private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
@@ -34,6 +39,9 @@ class Reservations : Fragment() {
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance()
 
+        // Get the userId from the main activity as an argument
+        val userId = arguments?.getString("userId")
+
         dataInitialize()
 
         val layoutManager = LinearLayoutManager(context)
@@ -43,8 +51,7 @@ class Reservations : Fragment() {
         adapter = ReservationsAdapter(foodMenuArrayList, foodPickUpDateTimesArr)
         reservationRecyclerView.adapter = adapter
 
-        // Get the userId from the main activity as an argument
-        val userId = arguments?.getString("userId")
+
 
         adapter.onItemClickListener = { foodMenu, foodPickUpDateTime ->
             val intent = Intent(requireContext(), ReservationDetailsExpand::class.java)
@@ -76,12 +83,12 @@ class Reservations : Fragment() {
         }
     }
 
-    private lateinit var foodMenusWithIds: MutableList<Pair<String, FoodMenuData>>
 
     private fun dataInitialize() {
         foodMenuArrayList = arrayListOf()
         foodPickUpDateTimesArr = arrayListOf()
         foodMenusWithIds = mutableListOf()
+        foodPickUpDateTimesWithIds = mutableListOf()
 
         // Reference to the "users" collection in Firestore
         val usersCollection = firestore.collection("users")
@@ -96,14 +103,18 @@ class Reservations : Fragment() {
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
-                        val pastReservations = documentSnapshot.get("pastReservations") as? MutableList<HashMap<String, Any>>
+                        val pastReservations = documentSnapshot.get("pastReservations") as? MutableList<HashMap<String, Date>>
 
                         // For each foodMenuId in pastReservations, access the "food_menus" collection
                         if (pastReservations != null) {
                             for (item in pastReservations) {
                                 val foodMenuId = item["foodMenuId"] as String
-                                val foodPickUpDateTime = item["foodPickUpDateTime"] as String
-                                foodPickUpDateTimesArr.add(foodPickUpDateTime)
+                                val foodPickUpDateTimeStr = item["foodPickUpDateTime"] as String
+
+                                // Parse the date string to a Date object
+                                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                                val foodPickUpDateTime = sdf.parse(foodPickUpDateTimeStr)
+
                                 val foodMenuReference = firestore.collection("food_menus").document(foodMenuId)
 
 
@@ -114,13 +125,21 @@ class Reservations : Fragment() {
                                     if (foodMenu != null) {
                                         val documentId = foodMenuDocumentSnapshot.id
                                         foodMenusWithIds.add(Pair(documentId, foodMenu))
+                                        foodPickUpDateTimesWithIds.add(Pair(foodPickUpDateTime, documentId))
                                         foodMenuArrayList.add(foodMenu)
+                                        foodPickUpDateTimesArr.add(foodPickUpDateTime)
                                         adapter.notifyDataSetChanged()
+
+
                                     }
+
+
+
                                 }.addOnFailureListener { exception ->
                                     // Handle any errors here
                                     Log.e("Firestore", "Error fetching data: ${exception.message}")
                                 }
+
                             }
                         }
                     }
@@ -131,4 +150,6 @@ class Reservations : Fragment() {
                 }
         }
     }
+    
 }
+
