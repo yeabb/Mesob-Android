@@ -113,8 +113,6 @@ class FoodMenu : Fragment() {
                     }
                 }
 
-                // Sort the foodMenuArrayList by distance
-                foodMenuArrayList.sortBy { it.location?.let { it1 -> calculateHaversineDistance(it1, userLocation) } }
                 adapter.notifyDataSetChanged() // Notify the adapter that data has changed
             }
             .addOnFailureListener { exception ->
@@ -123,24 +121,5 @@ class FoodMenu : Fragment() {
             }
     }
 
-    // Using haversine formula to calculate the distance between user's location and gas station location
-    private fun calculateHaversineDistance(
-        location1: GeoPoint,
-        location2: GeoPoint
-    ): Double {
-        val radiusOfEarth = 6371.0 // Earth's radius in kilometers
 
-        // Convert latitude and longitude from degrees to radians
-        val lat1Rad = Math.toRadians(location1.latitude)
-        val lon1Rad = Math.toRadians(location1.longitude)
-        val lat2Rad = Math.toRadians(location2.latitude)
-        val lon2Rad = Math.toRadians(location2.longitude)
-
-        // Haversine formula
-        val dLat = lat2Rad - lat1Rad
-        val dLon = lon2Rad - lon1Rad
-        val a = sin(dLat / 2).pow(2) + cos(lat1Rad) * cos(lat2Rad) * sin(dLon / 2).pow(2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return radiusOfEarth * c
-    }
 }

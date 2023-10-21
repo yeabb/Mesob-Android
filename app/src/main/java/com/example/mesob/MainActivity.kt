@@ -56,11 +56,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Transfer the user id to the FoodMenu fragment for later use
         val args = Bundle()
         args.putString("userId", userId.toString())
+
         val foodMenu = FoodMenu()
         foodMenu.arguments = args
 
         val reservations = Reservations()
         reservations.arguments = args
+
+        val refer = Refer()
+        refer.arguments = args
 
 
 
@@ -117,7 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when (it.itemId) {
                 R.id.miFoodMenu -> replaceFragment(foodMenu)
                 R.id.miReservations -> replaceFragment(reservations)
-                R.id.miRefer -> replaceFragment(Refer())
+                R.id.miRefer -> replaceFragment(refer)
                 R.id.miMap -> replaceFragment(Map())
             }
             true

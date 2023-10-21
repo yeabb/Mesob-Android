@@ -15,18 +15,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Rewards"
-        android:textSize="25sp" />
+        android:text="Share Mesob with your friends &amp; family. Earn rewards for every referral!!!"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRewards"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/tvFragmentDescriptionFoodMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="10dp"/>
 
 
     <androidx.cardview.widget.CardView
