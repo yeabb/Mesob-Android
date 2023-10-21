@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.QuerySnapshot
+import kotlin.math.roundToInt
 
 
 class Refer : Fragment() {
@@ -19,6 +22,11 @@ class Refer : Fragment() {
     private lateinit var referRecyclerView: RecyclerView
     private lateinit var rewardArrayList: ArrayList<RewardData>
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var tvPercentageAmount: TextView
+    private lateinit var tvConfirmedReferralAmount: TextView
+    private lateinit var tvPendingReferralAmount: TextView
+    private lateinit var percentageProgressBar: ProgressBar
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +41,11 @@ class Refer : Fragment() {
 
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance()
+
+        tvPercentageAmount = view.findViewById(R.id.tvPercentageAmount)
+        tvConfirmedReferralAmount = view.findViewById(R.id.tvConfirmedReferralAmount)
+        tvPendingReferralAmount = view.findViewById(R.id.tvPendingReferralAmount)
+        percentageProgressBar = view.findViewById(R.id.percentageProgressBar)
 
 
 
@@ -49,6 +62,27 @@ class Refer : Fragment() {
 
         //Get the userId from the main activity as an arg
         val userId = arguments?.getString("userId")
+        val pendingReferral = arguments?.getInt("pendingReferral")
+        val confirmedReferral = 0 //arguments?.getInt("confirmedReferral")
+        val totalRequiredReferral = 30
+
+        tvConfirmedReferralAmount.text = confirmedReferral.toString()
+        tvPendingReferralAmount.text = pendingReferral.toString()
+
+        val rewardPercentage =
+            confirmedReferral?.let { calculateRewardPercentage(it, totalRequiredReferral)}
+                ?.roundToInt()
+
+        if (rewardPercentage != null) {
+            val rewardPercentageStr = rewardPercentage.toString()
+            tvPercentageAmount.text = "$rewardPercentageStr%"
+        }
+
+        if (rewardPercentage != null) {
+            percentageProgressBar.progress = rewardPercentage
+        }
+
+
 
 
 
@@ -109,5 +143,11 @@ class Refer : Fragment() {
                 Log.e("Firestore", "Error fetching data: ${exception.message}")
             }
     }
+
+    private fun calculateRewardPercentage(confirmedReferral: Int, totalRequiredReferral: Int): Double {
+        val rewardPercentage = (confirmedReferral.toDouble() / totalRequiredReferral) * 100.0
+        return rewardPercentage
+    }
+
 
 }
