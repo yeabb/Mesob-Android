@@ -9,11 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.QuerySnapshot
 import kotlin.math.roundToInt
 
 
@@ -26,7 +25,8 @@ class Refer : Fragment() {
     private lateinit var tvConfirmedReferralAmount: TextView
     private lateinit var tvPendingReferralAmount: TextView
     private lateinit var percentageProgressBar: ProgressBar
-
+    private var confirmedReferral: Int = 0
+    private var pendingReferral: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +47,10 @@ class Refer : Fragment() {
         tvPendingReferralAmount = view.findViewById(R.id.tvPendingReferralAmount)
         percentageProgressBar = view.findViewById(R.id.percentageProgressBar)
 
-
+        // Initially hide UI components
+        tvConfirmedReferralAmount.visibility = View.INVISIBLE
+        tvPendingReferralAmount.visibility = View.INVISIBLE
+        percentageProgressBar.visibility = View.INVISIBLE
 
         dataInitialize()
 
@@ -58,96 +61,76 @@ class Refer : Fragment() {
         adapter = ReferAdapter(rewardArrayList)
         referRecyclerView.adapter = adapter
 
-
-
-        //Get the userId from the main activity as an arg
+        // Get the userId from the main activity as an arg
         val userId = arguments?.getString("userId")
-        val pendingReferral = arguments?.getInt("pendingReferral")
-        val confirmedReferral = arguments?.getInt("confirmedReferral")
-        val totalRequiredReferral = 30
 
+        // Get confirmedReferral and pendingReferral from Firestore "users" collections
+        dataReferralNumberInitialize(userId)
+    }
+
+    private fun dataReferralNumberInitialize(userId: String?) {
+        val userDocRef = userId?.let { firestore.collection("users").document(it) }
+
+        userDocRef?.get()
+            ?.addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    // Data exists for the specified user
+                    confirmedReferral = documentSnapshot.getLong("confirmedReferral")?.toInt() ?: 0
+                    pendingReferral = documentSnapshot.getLong("pendingReferral")?.toInt() ?: 0
+                    // Update the UI components and make them visible
+                    updateUI()
+                } else {
+                    // No data found for the specified user
+                    // Handle this case accordingly
+                }
+            }
+            ?.addOnFailureListener { e ->
+                // Handle any errors that occurred during the fetch
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching user data: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun updateUI() {
         tvConfirmedReferralAmount.text = confirmedReferral.toString()
         tvPendingReferralAmount.text = pendingReferral.toString()
 
-        val rewardPercentage =
-            confirmedReferral?.let { calculateRewardPercentage(it, totalRequiredReferral)}
-                ?.roundToInt()
+        val totalRequiredReferral = 30
+        val rewardPercentage = calculateRewardPercentage(confirmedReferral, totalRequiredReferral).roundToInt()
 
-        if (rewardPercentage != null) {
-            val rewardPercentageStr = rewardPercentage.toString()
-            tvPercentageAmount.text = "$rewardPercentageStr%"
-        }
+        val rewardPercentageStr = rewardPercentage.toString()
+        tvPercentageAmount.text = "$rewardPercentageStr%"
+        percentageProgressBar.progress = rewardPercentage
 
-        if (rewardPercentage != null) {
-            percentageProgressBar.progress = rewardPercentage
-        }
-
-
-
-
-
-
-
-//        adapter.onItemClickListener = { reward ->
-//            val intent = Intent(requireContext(), RewardDetailsExpand::class.java)
-//
-//            // Retrieve the document ID associated with the gas station data
-//            val foodMenuId = foodMenusWithIds.find { it.second == foodMenu }?.first
-//
-//            intent.putExtra("foodMenuId", foodMenuId) // Pass the document ID
-//            intent.putExtra("userId", userId)
-//            intent.putExtra("foodName", foodMenu.foodName)
-//            intent.putExtra("restaurantName", foodMenu.restaurantName)
-//            intent.putExtra("restaurantAdress", foodMenu.restaurantAdress)
-//            intent.putExtra("restaurantPhone", foodMenu.restaurantPhone)
-//            foodMenu.location?.let { intent.putExtra("restaurantLatitude", it.latitude) }
-//            foodMenu.location?.let { intent.putExtra("restaurantLongitude", it.longitude) }
-//            intent.putExtra("foodCreditNumber", foodMenu.foodCreditNumber)
-//            intent.putExtra("foodIngredients", foodMenu.foodIngredients)
-//            intent.putExtra("rating", foodMenu.rating)
-//            intent.putExtra("numberOfReviews", foodMenu.numberOfReviews)
-//            startActivity(intent)
-//        }
+        // Make the UI components visible
+        tvConfirmedReferralAmount.visibility = View.VISIBLE
+        tvPendingReferralAmount.visibility = View.VISIBLE
+        percentageProgressBar.visibility = View.VISIBLE
     }
 
-
-
-    private lateinit var rewardsWithIds: MutableList<Pair<String, RewardData>>
-
     private fun dataInitialize() {
-        rewardArrayList = arrayListOf<RewardData>()
+        rewardArrayList = arrayListOf()
 
-        // Reference to the "gas_stations" collection in Firestore
         val collectionReference = firestore.collection("rewards")
 
-        // Fetch data from Firestore without sorting
         collectionReference
             .get()
-            .addOnSuccessListener { querySnapshot: QuerySnapshot? ->
-                rewardsWithIds = mutableListOf()
-
-                querySnapshot?.documents?.forEach { documentSnapshot ->
+            .addOnSuccessListener { querySnapshot ->
+                querySnapshot.documents.forEach { documentSnapshot ->
                     val reward = documentSnapshot.toObject(RewardData::class.java)
-
-                    if (reward != null) {
-                        val documentId = documentSnapshot.id
-                        rewardsWithIds.add(Pair(documentId, reward))
-                        rewardArrayList.add(reward)
-                    }
+                    reward?.let { rewardArrayList.add(it) }
                 }
-
-                adapter.notifyDataSetChanged() // Notify the adapter that data has changed
+                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
-                // Handle any errors here
                 Log.e("Firestore", "Error fetching data: ${exception.message}")
             }
     }
 
     private fun calculateRewardPercentage(confirmedReferral: Int, totalRequiredReferral: Int): Double {
-        val rewardPercentage = (confirmedReferral.toDouble() / totalRequiredReferral) * 100.0
-        return rewardPercentage
+        return (confirmedReferral.toDouble() / totalRequiredReferral) * 100.0
     }
-
-
 }
