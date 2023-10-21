@@ -86,7 +86,8 @@ class Signup : Fragment() {
                 "lastName" to lastName,
                 "liveReservations" to arrayListOf<String>(), // Initialize with an empty array
                 "pastReservations" to arrayListOf<String>(), // Initialize with an empty array
-                "numberOfReferrals" to 0
+                "pendingReferral" to 0,
+                "confirmedReferral" to 0,
             )
 
             userDocRef.set(userData)

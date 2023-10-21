@@ -63,7 +63,7 @@ class Refer : Fragment() {
         //Get the userId from the main activity as an arg
         val userId = arguments?.getString("userId")
         val pendingReferral = arguments?.getInt("pendingReferral")
-        val confirmedReferral = 0 //arguments?.getInt("confirmedReferral")
+        val confirmedReferral = arguments?.getInt("confirmedReferral")
         val totalRequiredReferral = 30
 
         tvConfirmedReferralAmount.text = confirmedReferral.toString()

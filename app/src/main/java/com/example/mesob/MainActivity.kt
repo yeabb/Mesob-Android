@@ -57,14 +57,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val args = Bundle()
         args.putString("userId", userId.toString())
 
+
         val foodMenu = FoodMenu()
         foodMenu.arguments = args
 
         val reservations = Reservations()
         reservations.arguments = args
 
-        val refer = Refer()
-        refer.arguments = args
 
 
 
@@ -91,6 +90,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val firstName = documentSnapshot.getString("firstName")
                         val lastName = documentSnapshot.getString("lastName")
                         val fullName = "$firstName $lastName"
+                        val confirmedReferral = documentSnapshot.getLong("confirmedReferral")?.toInt() ?: 0
+                        val pendingReferral = documentSnapshot.getLong("pendingReferral")?.toInt() ?: 0
+                        args.putInt("confirmedReferral", confirmedReferral)
+                        args.putInt("pendingReferral", pendingReferral)
                         tvNavUserName.text = fullName
                         tvNavEmail.text = email
 
@@ -112,6 +115,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             showBottomNavigation()
             replaceFragment(foodMenu)
         }
+
+        //We pass the argument for the refer fragment here because we first have to get
+        //the referral numbers from the "users" firestore collections right above
+        val refer = Refer()
+        refer.arguments = args
 
 
 
